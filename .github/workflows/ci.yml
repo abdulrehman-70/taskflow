@@ -1,0 +1,44 @@
+name: TaskFlow CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  laravel:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, ctype, fileinfo, json, bcmath, pdo, pdo_mysql, redis
+          coverage: none
+
+      - name: Copy environment file
+        working-directory: src
+        run: cp .env.example .env
+
+      - name: Install Composer dependencies
+        working-directory: src
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Generate application key
+        working-directory: src
+        run: php artisan key:generate
+
+      - name: Run Laravel Pint
+        working-directory: src
+        run: ./vendor/bin/pint --test
+
+      - name: Run Larastan
+        working-directory: src
+        run: ./vendor/bin/phpstan analyse
