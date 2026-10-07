@@ -1,0 +1,690 @@
+# TaskFlow
+
+TaskFlow is a production-style team project and task management REST API built with Laravel.
+
+The project is designed to demonstrate practical backend development concepts including authentication, authorization, project management, task management, background jobs, notifications, Redis caching, scheduled tasks, file storage, API rate limiting, Docker, and API documentation.
+
+---
+
+## Features
+
+- User registration and authentication
+- Laravel Sanctum API authentication
+- Email verification
+- Password reset
+- Google OAuth authentication
+- Role and permission management
+- Project management
+- Project members
+- Project invitations
+- Task management
+- Task assignment
+- Task comments
+- Task attachments
+- Notifications
+- Activity logs
+- Project statistics
+- Redis caching
+- Redis queues
+- Laravel Horizon
+- Scheduled tasks
+- API rate limiting
+- Search, filtering, sorting, and pagination
+- Docker-based development environment
+- Mailpit for local email testing
+- Database factories and seeders
+- API documentation
+
+---
+
+## Tech Stack
+
+- PHP 8.4+
+- Laravel 13
+- MySQL 8
+- Redis
+- Laravel Horizon
+- Laravel Sanctum
+- Spatie Laravel Permission
+- Laravel Socialite
+- Docker
+- Docker Compose
+- Nginx
+- Mailpit
+- phpMyAdmin
+- Git
+- GitHub
+
+---
+
+## Project Structure
+
+```text
+C:\taskflow
+│
+├── docker/
+│   ├── nginx/
+│   └── php/
+│
+├── src/
+│   ├── app/
+│   ├── bootstrap/
+│   ├── config/
+│   ├── database/
+│   ├── docs/
+│   │   └── API.md
+│   ├── public/
+│   ├── resources/
+│   ├── routes/
+│   ├── storage/
+│   └── ...
+│
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+# Requirements
+
+The project uses Docker, so the main requirement is:
+
+- Docker Desktop
+- Git
+- A code editor such as Visual Studio Code
+
+PHP, MySQL, Redis, Nginx, Mailpit, and phpMyAdmin are provided through Docker.
+
+---
+
+# Docker Services
+
+The Docker environment contains the following services:
+
+| Service | Purpose |
+|---|---|
+| `app` | Laravel PHP application |
+| `nginx` | Web server |
+| `mysql` | Database |
+| `redis` | Cache and queue backend |
+| `horizon` | Queue worker |
+| `mailpit` | Local email testing |
+| `phpmyadmin` | Database management |
+
+---
+
+# Application URLs
+
+| Service | URL |
+|---|---|
+| TaskFlow API | http://localhost:8000 |
+| phpMyAdmin | http://localhost:8080 |
+| Mailpit | http://localhost:8025 |
+
+---
+
+# Getting Started
+
+## 1. Clone the Project
+
+```bash
+git clone <repository-url>
+cd taskflow
+```
+
+---
+
+## 2. Start Docker
+
+From the project root:
+
+```bash
+docker compose up -d
+```
+
+Check running containers:
+
+```bash
+docker compose ps
+```
+
+---
+
+## 3. Install Composer Dependencies
+
+Enter the application container:
+
+```bash
+docker compose exec app bash
+```
+
+Then run:
+
+```bash
+composer install
+```
+
+---
+
+## 4. Environment Configuration
+
+Copy the environment file:
+
+```bash
+cp .env.example .env
+```
+
+Configure the database:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=taskflow
+DB_USERNAME=taskflow
+DB_PASSWORD=taskflow
+```
+
+Configure Redis:
+
+```env
+CACHE_STORE=redis
+QUEUE_CONNECTION=redis
+
+REDIS_CLIENT=phpredis
+REDIS_HOST=redis
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+```
+
+Configure Mailpit:
+
+```env
+MAIL_MAILER=smtp
+MAIL_SCHEME=null
+MAIL_HOST=mailpit
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_FROM_ADDRESS="hello@taskflow.test"
+MAIL_FROM_NAME="TaskFlow"
+```
+
+Generate the application key:
+
+```bash
+php artisan key:generate
+```
+
+---
+
+# Database
+
+Run migrations:
+
+```bash
+docker compose exec app php artisan migrate
+```
+
+For a fresh database with seed data:
+
+```bash
+docker compose exec app php artisan migrate:fresh --seed
+```
+
+The seeders create development data for testing the application.
+
+---
+
+# Storage
+
+Create the public storage link:
+
+```bash
+docker compose exec app php artisan storage:link
+```
+
+Task attachments are stored using Laravel's filesystem.
+
+---
+
+# Redis
+
+Redis is provided by Docker.
+
+No Redis installation is required on the Windows host.
+
+The application uses Redis for:
+
+- Cache
+- Queues
+- Horizon
+
+The Laravel application connects to Redis using the Docker service name:
+
+```env
+REDIS_HOST=redis
+```
+
+---
+
+# Queue System
+
+TaskFlow uses Redis queues for background processing.
+
+Examples include:
+
+- Email verification
+- Project invitation emails
+- Task assignment notifications
+- Task overdue notifications
+
+The queue connection is configured as:
+
+```env
+QUEUE_CONNECTION=redis
+```
+
+---
+
+# Laravel Horizon
+
+Horizon monitors and processes queued jobs.
+
+Start Horizon manually:
+
+```bash
+docker compose exec app php artisan horizon
+```
+
+In the Docker environment, Horizon runs through the dedicated Horizon service.
+
+Check Horizon:
+
+```text
+http://localhost:8000/horizon
+```
+
+---
+
+# Mailpit
+
+Mailpit is used for local email testing.
+
+Open:
+
+```text
+http://localhost:8025
+```
+
+Emails generated by TaskFlow during development can be viewed there without sending real emails.
+
+---
+
+# Scheduler
+
+TaskFlow includes a scheduled command for processing overdue tasks.
+
+Command:
+
+```bash
+docker compose exec app php artisan tasks:process-overdue
+```
+
+The command checks overdue tasks and sends notifications to assigned users.
+
+The command is scheduled through Laravel's scheduler.
+
+For local development, the scheduler can be run with:
+
+```bash
+docker compose exec app php artisan schedule:work
+```
+
+---
+
+# Authentication
+
+TaskFlow uses Laravel Sanctum for API authentication.
+
+Authenticated requests require:
+
+```text
+Authorization: Bearer {token}
+```
+
+Authentication features include:
+
+- Registration
+- Login
+- Logout
+- Current user
+- Change password
+- Forgot password
+- Reset password
+- Email verification
+- Google OAuth
+
+---
+
+# Authorization
+
+TaskFlow uses multiple authorization layers:
+
+1. Laravel Sanctum
+2. Spatie Laravel Permission
+3. Laravel Policies
+
+Application roles:
+
+```text
+admin
+manager
+member
+```
+
+Project membership roles:
+
+```text
+manager
+member
+```
+
+Permissions are used for specific actions, while policies handle resource-level authorization.
+
+---
+
+# API Versioning
+
+The API is versioned using:
+
+```text
+/api/v1
+```
+
+Example:
+
+```text
+http://localhost:8000/api/v1/projects
+```
+
+This allows future API versions to be introduced without breaking existing clients.
+
+---
+
+# API Documentation
+
+Complete API documentation is available at:
+
+```text
+src/docs/API.md
+```
+
+The documentation contains:
+
+- Authentication endpoints
+- Projects
+- Project members
+- Project invitations
+- Tasks
+- Comments
+- Attachments
+- Notifications
+- Activity logs
+- Project statistics
+- Rate limiting
+- Authorization
+- Background processing
+
+---
+
+# Rate Limiting
+
+TaskFlow applies rate limits to protect the API.
+
+| Endpoint Group | Limit |
+|---|---|
+| Register / Login | 5 requests per minute per IP |
+| Password Reset | 3 requests per minute per IP |
+| Email Verification | 3 requests per minute per IP |
+| Authenticated API | 60 requests per minute per user |
+
+When a limit is exceeded, the API returns:
+
+```text
+429 Too Many Requests
+```
+
+---
+
+# Database Seeding
+
+The project includes factories and seeders for generating development data.
+
+The development dataset includes approximately:
+
+- 1,000 users
+- 100 projects
+- Multiple project memberships
+- 5,000 tasks
+- Thousands of comments
+- 750 attachment metadata records
+- Thousands of activity logs
+- Notifications
+
+Run:
+
+```bash
+docker compose exec app php artisan migrate:fresh --seed
+```
+
+The seeded data is intended for development and API testing.
+
+---
+
+# Useful Docker Commands
+
+## Start Containers
+
+```bash
+docker compose up -d
+```
+
+## Stop Containers
+
+```bash
+docker compose down
+```
+
+## Restart Containers
+
+```bash
+docker compose restart
+```
+
+## View Container Status
+
+```bash
+docker compose ps
+```
+
+## View Logs
+
+```bash
+docker compose logs
+```
+
+## View Application Logs
+
+```bash
+docker compose logs app
+```
+
+## Open Application Shell
+
+```bash
+docker compose exec app bash
+```
+
+## Run Artisan Command
+
+```bash
+docker compose exec app php artisan <command>
+```
+
+Example:
+
+```bash
+docker compose exec app php artisan migrate
+```
+
+## Run Composer
+
+```bash
+docker compose exec app composer <command>
+```
+
+Example:
+
+```bash
+docker compose exec app composer install
+```
+
+## Laravel Tinker
+
+```bash
+docker compose exec app php artisan tinker
+```
+
+---
+
+# Git Workflow
+
+The project uses Git for version control.
+
+Recommended workflow:
+
+```text
+main
+  │
+  ├── feature/authentication
+  ├── feature/projects
+  ├── feature/tasks
+  └── feature/notifications
+```
+
+Feature branches should be used for individual pieces of functionality.
+
+Example:
+
+```bash
+git checkout -b feature/task-management
+```
+
+Commit changes with clear messages:
+
+```bash
+git add .
+git commit -m "Add task management API"
+```
+
+Push the branch:
+
+```bash
+git push origin feature/task-management
+```
+
+---
+
+# Development Guidelines
+
+The project follows these principles:
+
+- Keep controllers thin.
+- Use Form Requests for validation.
+- Use Policies for resource authorization.
+- Use services where business logic benefits from separation.
+- Keep API responses explicit and predictable.
+- Use database constraints where appropriate.
+- Use eager loading where needed.
+- Use queued jobs for background work.
+- Use notifications for user-facing events.
+- Keep secrets in environment variables.
+- Avoid exposing internal implementation details through API responses.
+- Use meaningful Git commits.
+- Keep documentation synchronized with API changes.
+
+---
+
+# Security
+
+Important security considerations:
+
+- API authentication uses Laravel Sanctum.
+- Resource authorization uses Laravel Policies.
+- Permissions are managed through Spatie Laravel Permission.
+- Authentication endpoints are rate limited.
+- Passwords are hashed using Laravel's password hashing.
+- Signed URLs are used for email verification.
+- Uploaded files are validated by type and size.
+- Sensitive configuration values are stored in `.env`.
+- Redis and MySQL should not be unnecessarily exposed publicly.
+- Production applications should use HTTPS.
+- Debug mode should be disabled in production.
+
+---
+
+# Production Notes
+
+The current Docker configuration is primarily intended for development and local testing.
+
+Before production deployment, review:
+
+- Environment variables
+- HTTPS
+- Database credentials
+- Redis security
+- Queue workers
+- Horizon configuration
+- Scheduler
+- File storage
+- Logging
+- Error handling
+- Rate limits
+- CORS
+- Server configuration
+- Database backups
+- Application monitoring
+
+---
+
+# Project Status
+
+TaskFlow backend development includes:
+
+- Authentication
+- Authorization
+- Projects
+- Project members
+- Project invitations
+- Tasks
+- Comments
+- Attachments
+- Notifications
+- Activity logs
+- Project statistics
+- Redis caching
+- Redis queues
+- Horizon
+- Scheduled tasks
+- Rate limiting
+- API documentation
+- Docker development environment
+
+Frontend development can be added separately without changing the backend API architecture.
+
+---
+
+# License
+
+This project is currently intended as a personal development and portfolio project.

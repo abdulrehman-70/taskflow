@@ -1,0 +1,50 @@
+# Laravel
+/src/vendor/
+/src/node_modules/
+/src/.env
+/src/.env.*
+!/src/.env.example
+
+# Laravel runtime
+/src/storage/*.key
+/src/storage/app/*
+/src/storage/framework/cache/*
+/src/storage/framework/sessions/*
+/src/storage/framework/testing/*
+/src/storage/framework/views/*
+/src/storage/logs/*
+
+# Keep required storage directories
+!/src/storage/app/.gitignore
+!/src/storage/framework/.gitignore
+!/src/storage/framework/cache/.gitignore
+!/src/storage/framework/sessions/.gitignore
+!/src/storage/framework/testing/.gitignore
+!/src/storage/framework/views/.gitignore
+!/src/storage/logs/.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Docker
+docker-compose.override.yml
+
+# PHPUnit
+/src/.phpunit.result.cache
+
+# Coverage
+coverage/
+.phpunit.cache/
+
+# Environment
+.env
+.env.*
+!.env.example
