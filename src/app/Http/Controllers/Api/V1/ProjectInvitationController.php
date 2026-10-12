@@ -6,15 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SendProjectInvitationRequest;
 use App\Models\Project;
 use App\Models\ProjectInvitation;
+use App\Notifications\ProjectInvitationNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
-use App\Notifications\ProjectInvitationNotification;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 
 class ProjectInvitationController extends Controller
 {
-  public function send(SendProjectInvitationRequest $request,Project $project): JsonResponse {
+    public function send(SendProjectInvitationRequest $request, Project $project): JsonResponse
+    {
         Gate::authorize('inviteMember', $project);
 
         $email = $request->validated('email');

@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Task;
 use App\Models\ActivityLog;
+use App\Models\Task;
 use App\Notifications\TaskOverdueNotification;
 use Illuminate\Console\Command;
 

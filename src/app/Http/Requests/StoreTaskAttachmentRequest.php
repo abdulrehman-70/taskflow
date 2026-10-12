@@ -22,7 +22,7 @@ class StoreTaskAttachmentRequest extends FormRequest
      */
     public function rules(): array
     {
-       return [
+        return [
             'file' => [
                 'required',
                 'file',

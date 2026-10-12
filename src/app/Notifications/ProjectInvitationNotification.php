@@ -15,7 +15,7 @@ class ProjectInvitationNotification extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct( protected Project $project, Protected string $token)
+    public function __construct(protected Project $project, protected string $token)
     {
         $this->onQueue('notifications');
     }
@@ -36,7 +36,7 @@ class ProjectInvitationNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         $invitationUrl = url(
-            '/api/v1/projects/invitations/' . $this->token
+            '/api/v1/projects/invitations/'.$this->token
         );
 
         return (new MailMessage)
@@ -44,7 +44,7 @@ class ProjectInvitationNotification extends Notification implements ShouldQueue
             ->view('emails.project-invitation', [
                 'project' => $this->project,
                 'invitationUrl' => $invitationUrl,
-        ]);
+            ]);
     }
 
     /**

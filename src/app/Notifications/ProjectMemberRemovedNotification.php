@@ -40,7 +40,7 @@ class ProjectMemberRemovedNotification extends Notification implements ShouldQue
             ->view('emails.project-member-removed', [
                 'user' => $notifiable,
                 'project' => $this->project,
-        ]);
+            ]);
     }
 
     /**

@@ -35,13 +35,13 @@ class ProjectMemberAddedNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-         return (new MailMessage)
+        return (new MailMessage)
             ->subject("You've been added to {$this->project->name}")
             ->view('emails.project-member-added', [
                 'user' => $notifiable,
                 'project' => $this->project,
                 'role' => $this->role,
-        ]);
+            ]);
     }
 
     /**

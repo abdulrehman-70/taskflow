@@ -32,6 +32,7 @@ class ChangePasswordRequest extends FormRequest
             ],
         ];
     }
+
     public function messages(): array
     {
         return [

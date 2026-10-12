@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'accepted_at',
 ])]
 
-
 class ProjectInvitation extends Model
 {
     protected function casts(): array
@@ -26,6 +25,7 @@ class ProjectInvitation extends Model
             'accepted_at' => 'datetime',
         ];
     }
+
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);

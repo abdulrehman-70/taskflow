@@ -19,8 +19,7 @@ class TaskAssignedNotification extends Notification implements ShouldQueue
     public function __construct(
         protected Task $task,
         protected Project $project
-    )
-    {
+    ) {
         $this->onQueue('notifications');
     }
 
@@ -39,7 +38,7 @@ class TaskAssignedNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-         return (new MailMessage)
+        return (new MailMessage)
             ->subject("Task assigned to you: {$this->task->title}")
             ->view('emails.task-assigned', [
                 'user' => $notifiable,

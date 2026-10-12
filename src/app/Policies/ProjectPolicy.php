@@ -4,16 +4,13 @@ namespace App\Policies;
 
 use App\Models\Project;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class ProjectPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user, Project $project): bool
-    {
-    }
+    public function viewAny(User $user, Project $project): bool {}
 
     /**
      * Determine whether the user can view the model.
@@ -74,6 +71,7 @@ class ProjectPolicy
                 ->where('role', 'manager')
                 ->exists();
     }
+
     public function removeMember(User $user, Project $project): bool
     {
         return $project->created_by === $user->id
@@ -82,6 +80,7 @@ class ProjectPolicy
                 ->where('role', 'manager')
                 ->exists();
     }
+
     public function inviteMember(User $user, Project $project): bool
     {
         return $project->created_by === $user->id

@@ -34,11 +34,11 @@ class PasswordChangedNotification extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-       return (new MailMessage)
+        return (new MailMessage)
             ->subject('Your TaskFlow password was changed')
             ->view('emails.password-changed', [
                 'user' => $notifiable,
-        ]);
+            ]);
     }
 
     /**

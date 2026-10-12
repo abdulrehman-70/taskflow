@@ -37,7 +37,9 @@ class ProjectMemberController extends Controller
             'data' => $members,
         ]);
     }
-    public function store( AddProjectMemberRequest $request,  Project $project): JsonResponse {
+
+    public function store(AddProjectMemberRequest $request, Project $project): JsonResponse
+    {
         Gate::authorize('addMember', $project);
 
         $userId = $request->validated('user_id');
@@ -86,33 +88,30 @@ class ProjectMemberController extends Controller
                 ],
             ],
         ], 201);
-        }
-
-        public function destroy(Project $project, User $user): JsonResponse
-        {
-            Gate::authorize('removeMember', $project);
-
-            $member = $project->members()
-                ->where('user_id', $user->id)
-                ->first();
-
-            if (! $member) {
-                return response()->json([
-                    'message' => 'User is not a member of this project.',
-                ], 404);
-            }
-
-            $user->notify(
-                new ProjectMemberRemovedNotification($project)
-            );
-
-            $member->delete();
-
-            return response()->json([
-                'message' => 'Project member removed successfully.',
-            ]);
-        }
     }
 
+    public function destroy(Project $project, User $user): JsonResponse
+    {
+        Gate::authorize('removeMember', $project);
 
+        $member = $project->members()
+            ->where('user_id', $user->id)
+            ->first();
 
+        if (! $member) {
+            return response()->json([
+                'message' => 'User is not a member of this project.',
+            ], 404);
+        }
+
+        $user->notify(
+            new ProjectMemberRemovedNotification($project)
+        );
+
+        $member->delete();
+
+        return response()->json([
+            'message' => 'Project member removed successfully.',
+        ]);
+    }
+}

@@ -54,7 +54,9 @@ class ProjectController extends Controller
             ],
         ]);
     }
-    public function update(UpdateProjectRequest $request, Project $project): JsonResponse {
+
+    public function update(UpdateProjectRequest $request, Project $project): JsonResponse
+    {
         Gate::authorize('update', $project);
         $project->update($request->validated());
 

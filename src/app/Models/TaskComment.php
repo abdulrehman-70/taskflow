@@ -20,6 +20,7 @@ class TaskComment extends Model
             'user_id' => 'integer',
         ];
     }
+
     public function task(): BelongsTo
     {
         return $this->belongsTo(Task::class);

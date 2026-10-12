@@ -19,7 +19,7 @@ class ProjectFactory extends Factory
 
         return [
             'created_by' => User::factory(),
-            'name' => fake()->catchPhrase() . ' Project',
+            'name' => fake()->catchPhrase().' Project',
             'description' => fake()->optional(0.8)->paragraph(),
             'status' => fake()->randomElement([
                 'active',

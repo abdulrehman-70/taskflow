@@ -33,7 +33,6 @@ return new class extends Migration
             $table->text('description');
             $table->json('metadata')->nullable();
 
-
             $table->index('project_id');
             $table->index('task_id');
             $table->index('user_id');

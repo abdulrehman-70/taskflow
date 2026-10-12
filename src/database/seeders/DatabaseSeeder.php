@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -72,7 +73,7 @@ class DatabaseSeeder extends Seeder
 
             $project = Project::create([
                 'created_by' => $creator->id,
-                'name' => fake()->catchPhrase() . ' Project',
+                'name' => fake()->catchPhrase().' Project',
                 'description' => fake()->optional(0.8)->paragraph(),
                 'status' => fake()->randomElement([
                     'active',
@@ -279,8 +280,8 @@ class DatabaseSeeder extends Seeder
             TaskAttachment::create([
                 'task_id' => $task->id,
                 'uploaded_by' => Arr::random($projectMemberIds),
-                'file_name' => fake()->words(3, true) . '.' . $extension,
-                'file_path' => "tasks/{$task->id}/attachments/" . fake()->uuid() . ".{$extension}",
+                'file_name' => fake()->words(3, true).'.'.$extension,
+                'file_path' => "tasks/{$task->id}/attachments/".fake()->uuid().".{$extension}",
                 'file_type' => $mimeType,
                 'file_size' => fake()->numberBetween(
                     10_000,
@@ -369,7 +370,7 @@ class DatabaseSeeder extends Seeder
             }
 
             DB::table('notifications')->insert([
-                'id' => (string) \Illuminate\Support\Str::uuid(),
+                'id' => (string) Str::uuid(),
                 'type' => 'App\\Notifications\\TaskAssignedNotification',
                 'notifiable_type' => User::class,
                 'notifiable_id' => $task->assigned_to,

@@ -78,10 +78,10 @@ class TaskController extends Controller
         ]);
     }
 
-   public function store(
-    StoreTaskRequest $request,
-    Project $project,
-    ProjectStatsService $statsService
+    public function store(
+        StoreTaskRequest $request,
+        Project $project,
+        ProjectStatsService $statsService
     ): JsonResponse {
         Gate::authorize('create', [Task::class, $project]);
 

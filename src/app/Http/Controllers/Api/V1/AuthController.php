@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
@@ -8,13 +9,11 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\ResendVerificationRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
-use App\Http\Requests\Auth\VerifyEmailRequest;
 use App\Models\User;
 use App\Notifications\PasswordChangedNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Laravel\Socialite\Socialite;
 
@@ -22,7 +21,7 @@ class AuthController extends Controller
 {
     public function register(RegisterRequest $request): JsonResponse
     {
-          $start = microtime(true);
+        $start = microtime(true);
         $user = User::create([
             'name' => $request->validated('name'),
             'email' => $request->validated('email'),
@@ -31,14 +30,15 @@ class AuthController extends Controller
 
         $afterUser = microtime(true);
         $user->sendEmailVerificationNotification();
-       $afterNotification = microtime(true);
+        $afterNotification = microtime(true);
+
         return response()->json([
             'message' => 'Registration successful. Please verify your email before logging in.',
-             'debug' => [
-            'user_creation' => round($afterUser - $start, 3),
-            'notification_dispatch' => round($afterNotification - $afterUser, 3),
-            'total' => round($afterNotification - $start, 3),
-        ],
+            'debug' => [
+                'user_creation' => round($afterUser - $start, 3),
+                'notification_dispatch' => round($afterNotification - $afterUser, 3),
+                'total' => round($afterNotification - $start, 3),
+            ],
         ], 201);
     }
 
@@ -68,7 +68,8 @@ class AuthController extends Controller
         ]);
     }
 
-    public function resendVerificationEmail(ResendVerificationRequest $request ): JsonResponse {
+    public function resendVerificationEmail(ResendVerificationRequest $request): JsonResponse
+    {
 
         $user = User::where('email', $request->validated('email'))->first();
         if (! $user) {
@@ -134,21 +135,24 @@ class AuthController extends Controller
             'message' => 'Logout successful.',
         ]);
     }
-    public function changePassword(ChangePasswordRequest $request): JsonResponse {
+
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
         $user = $request->user();
         $user->update([
             'password' => $request->validated('password'),
         ]);
 
         $user->tokens()->delete();
-        $user->notify(new PasswordChangedNotification());
+        $user->notify(new PasswordChangedNotification);
 
         return response()->json([
             'message' => 'Password changed successfully. Please log in again.',
         ]);
     }
 
-    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse {
+    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
+    {
         $status = Password::sendResetLink(
             $request->validated()
         );
@@ -164,7 +168,8 @@ class AuthController extends Controller
         ]);
     }
 
-     public function resetPassword( ResetPasswordRequest $request): JsonResponse {
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
+    {
         $resetUser = null;
 
         $status = Password::reset(
@@ -188,7 +193,7 @@ class AuthController extends Controller
         }
 
         // Send security notification only after a successful reset.
-        $resetUser->notify(new PasswordChangedNotification());
+        $resetUser->notify(new PasswordChangedNotification);
 
         return response()->json([
             'message' => 'Password reset successfully. Please log in again.',

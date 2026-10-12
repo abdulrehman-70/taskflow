@@ -5,8 +5,6 @@ namespace App\Listeners;
 use App\Events\TaskAssigned;
 use App\Models\ActivityLog;
 use App\Notifications\TaskAssignedNotification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class HandleTaskAssigned
 {

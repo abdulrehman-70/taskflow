@@ -28,8 +28,8 @@ class TaskAttachmentFactory extends Factory
         return [
             'task_id' => Task::factory(),
             'uploaded_by' => User::factory(),
-            'file_name' => fake()->words(3, true) . '.' . $extension,
-            'file_path' => 'tasks/attachments/' . fake()->uuid() . '.' . $extension,
+            'file_name' => fake()->words(3, true).'.'.$extension,
+            'file_path' => 'tasks/attachments/'.fake()->uuid().'.'.$extension,
             'file_type' => match ($extension) {
                 'pdf' => 'application/pdf',
                 'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',

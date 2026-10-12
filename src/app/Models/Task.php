@@ -19,14 +19,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 ])]
 class Task extends Model
 {
-
     protected function casts(): array
     {
         return [
-        'assigned_to' => 'integer',
-        'due_date' => 'date',
+            'assigned_to' => 'integer',
+            'due_date' => 'date',
         ];
     }
+
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);

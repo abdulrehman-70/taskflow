@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Gate;
 
 class TaskCommentController extends Controller
 {
-
     public function index(
         Project $project,
         Task $task
@@ -46,7 +45,6 @@ class TaskCommentController extends Controller
             'data' => $comments,
         ]);
     }
-
 
     public function store(
         StoreTaskCommentRequest $request,
@@ -85,8 +83,7 @@ class TaskCommentController extends Controller
         Project $project,
         Task $task,
         TaskComment $comment
-        ): JsonResponse
-        {
+    ): JsonResponse {
         Gate::authorize('view', $project);
 
         if ($task->project_id !== $project->id) {
@@ -127,11 +124,10 @@ class TaskCommentController extends Controller
     }
 
     public function destroy(
-    Project $project,
-    Task $task,
-    TaskComment $comment
-    ): JsonResponse
-    {
+        Project $project,
+        Task $task,
+        TaskComment $comment
+    ): JsonResponse {
         Gate::authorize('view', $project);
         if ($task->project_id !== $project->id) {
             return response()->json([
