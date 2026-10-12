@@ -223,7 +223,6 @@ class TaskController extends Controller
                 $task,
                 $project,
                 $assignee,
-                $request->user()
             );
         }
 

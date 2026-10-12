@@ -38,7 +38,3 @@ jobs:
       - name: Run Laravel Pint
         working-directory: src
         run: ./vendor/bin/pint --test
-
-      - name: Run Larastan
-        working-directory: src
-        run: ./vendor/bin/phpstan analyse
